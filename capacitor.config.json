@@ -1,0 +1,2 @@
+{ "appId": "com.waslni.app", "appName": "وصّلني", "webDir": "www", "backgroundColor": "#07080C",
+  "plugins": { "PushNotifications": { "presentationOptions": ["badge","sound","alert"] } } }

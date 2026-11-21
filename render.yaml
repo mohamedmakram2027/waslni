@@ -1,0 +1,37 @@
+# نشر وصّلني على Render بضغطة واحدة (Blueprint)
+services:
+  - type: web
+    name: waslni
+    runtime: node
+    plan: starter            # الـ Disk (لصور الهوية) محتاج خطة مدفوعة
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    disk:
+      name: uploads
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase: { name: waslni-db, property: connectionString }
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ENC_KEY
+        generateValue: true
+      - key: ADMIN_CODE
+        generateValue: true  # كود التسجيل كإدارة (انسخه من Environment)
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
+      - key: SMS_PROVIDER
+        value: twilio
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_FROM
+        sync: false          # أو TWILIO_MESSAGING_SERVICE_SID
+      - key: FIREBASE_SERVICE_ACCOUNT
+        sync: false          # اختياري: الصق JSON الإشعارات هنا
+databases:
+  - name: waslni-db
+    plan: basic-256mb        # الخطة المجانية بتتمسح بعد 30 يوم — ماينفعش لبيانات حقيقية

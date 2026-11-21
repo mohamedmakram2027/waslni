@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#07080C">
+    <title>وصّلني</title>
+    <link rel="icon" href="icon.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <style>
+         :root {
+            color-scheme: dark;
+            --bg: #07080C;
+            --card: #0F1118;
+            --c2: #161924;
+            --bd: #222637;
+            --tx: #EAF0FF;
+            --mut: #8A94B2;
+            --pri: #2E6BFF;
+            --pri2: #5B8CFF;
+            --cy: #35D0FF;
+            --red: #FF4D6A;
+            --glow: 0 0 24px rgba(46, 107, 255, .35)
+        }
+        
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent
+        }
+        
+        html,
+        body {
+            margin: 0;
+            background: var(--bg)
+        }
+        
+        body {
+            color: var(--tx);
+            font-family: Cairo, Tahoma, Arial, sans-serif;
+            line-height: 1.6;
+            padding-top: env(safe-area-inset-top, 0)
+        }
+        
+        .w {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 12px 14px calc(96px + env(safe-area-inset-bottom, 0))
+        }
+        
+        .sub {
+            color: var(--mut);
+            font-size: 13px
+        }
+        
+        .r {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px
+        }
+        
+        .c {
+            text-align: center
+        }
+        
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            color: var(--pri2);
+            text-shadow: 0 0 18px rgba(46, 107, 255, .6)
+        }
+        
+        .logo em {
+            font-style: normal;
+            filter: drop-shadow(0 0 10px rgba(46, 107, 255, .8))
+        }
+        
+        .hd {
+            padding: 6px 0 10px
+        }
+        
+        .ic {
+            background: var(--card);
+            border: 1px solid var(--bd);
+            color: var(--tx);
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            font-size: 20px;
+            flex: none;
+            cursor: pointer
+        }
+        
+        .card {
+            background: var(--card);
+            border: 1px solid var(--bd);
+            border-radius: 18px;
+            padding: 14px;
+            margin: 10px 0
+        }
+        
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--mut);
+            margin: 10px 0 4px
+        }
+        
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--bd);
+            border-radius: 12px;
+            background: var(--c2);
+            color: var(--tx);
+            font: inherit
+        }
+        
+        input:focus,
+        select:focus {
+            outline: 0;
+            border-color: var(--pri);
+            box-shadow: var(--glow)
+        }
+        
+        .num {
+            direction: ltr;
+            text-align: right
+        }
+        
+        .b {
+            border: 0;
+            background: var(--pri);
+            color: #fff;
+            padding: 13px;
+            border-radius: 14px;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 12px;
+            box-shadow: var(--glow)
+        }
+        
+        .b:disabled {
+            opacity: .4;
+            box-shadow: none
+        }
+        
+        .b.s {
+            width: auto;
+            padding: 8px 16px;
+            margin: 0
+        }
+        
+        .b.l {
+            background: none;
+            color: var(--pri2);
+            border: 1px solid var(--pri);
+            box-shadow: none
+        }
+        
+        .b.d {
+            background: var(--red);
+            box-shadow: none
+        }
+        
+        .t {
+            font-size: 12px;
+            padding: 3px 11px;
+            border-radius: 20px;
+            background: rgba(46, 107, 255, .15);
+            color: var(--pri2);
+            font-weight: 800;
+            white-space: nowrap
+        }
+        
+        .t.ok {
+            background: rgba(53, 208, 255, .14);
+            color: var(--cy)
+        }
+        
+        .vb {
+            font-size: 11px;
+            color: var(--cy);
+            background: rgba(53, 208, 255, .12);
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-weight: 800
+        }
+        
+        .bid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--bd);
+            background: var(--c2);
+            border-radius: 14px;
+            padding: 10px;
+            margin-top: 8px
+        }
+        
+        .p {
+            font-weight: 800;
+            font-size: 18px
+        }
+        
+        .big {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--pri2)
+        }
+        
+        .g {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px
+        }
+        
+        .code {
+            font-size: 22px;
+            letter-spacing: 5px;
+            font-weight: 800;
+            background: var(--c2);
+            color: var(--cy);
+            border: 1px dashed var(--pri);
+            border-radius: 12px;
+            padding: 4px 14px
+        }
+        
+        .e {
+            text-align: center;
+            color: var(--mut);
+            padding: 26px 0
+        }
+        
+        .map {
+            height: 190px;
+            border-radius: 14px;
+            margin-top: 10px;
+            border: 1px solid var(--bd)
+        }
+        
+        .pin {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            font-size: 14px;
+            border: 2px solid #fff;
+            box-shadow: 0 0 14px rgba(46, 107, 255, .8)
+        }
+        
+        .pin.a {
+            background: #2E6BFF;
+            color: #fff
+        }
+        
+        .pin.b {
+            background: #fff;
+            color: #07080C
+        }
+        
+        .pin.c {
+            background: #07080C;
+            border-color: #2E6BFF
+        }
+        
+        .leaflet-container {
+            background: #0b0d13
+        }
+        
+        .leaflet-control-attribution {
+            background: rgba(7, 8, 12, .7)!important;
+            color: var(--mut)!important
+        }
+        
+        .leaflet-control-attribution a {
+            color: var(--pri2)!important
+        }
+        
+        .stp {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px
+        }
+        
+        .stp i {
+            flex: 1;
+            height: 5px;
+            border-radius: 5px;
+            background: var(--bd)
+        }
+        
+        .stp i.on {
+            background: var(--pri);
+            box-shadow: var(--glow)
+        }
+        
+        .av {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--c2);
+            border: 2px solid var(--pri);
+            flex: none;
+            display: inline-grid;
+            place-items: center;
+            font-weight: 800;
+            color: var(--pri2)
+        }
+        
+        .av.big {
+            width: 88px;
+            height: 88px;
+            font-size: 34px
+        }
+        
+        .rc {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px
+        }
+        
+        .rc button {
+            flex: 1;
+            padding: 12px 6px;
+            border-radius: 14px;
+            border: 1.5px solid var(--bd);
+            background: var(--c2);
+            color: var(--mut);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer
+        }
+        
+        .rc button.on {
+            border-color: var(--pri);
+            color: var(--tx);
+            box-shadow: var(--glow)
+        }
+        
+        .rc span {
+            display: block;
+            font-size: 26px
+        }
+        
+        .pwr {
+            position: relative
+        }
+        
+        .pwr button {
+            position: absolute;
+            left: 6px;
+            top: 6px;
+            border: 0;
+            background: none;
+            font-size: 18px;
+            color: var(--mut);
+            padding: 6px
+        }
+        
+        .ph {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            border: 1.5px dashed var(--pri);
+            border-radius: 14px;
+            background: var(--c2);
+            min-height: 128px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            overflow: hidden;
+            margin: 0;
+            color: var(--tx)
+        }
+        
+        .ph.ok {
+            border-style: solid;
+            border-color: var(--cy)
+        }
+        
+        .ph img {
+            max-width: 100%;
+            max-height: 96px;
+            border-radius: 8px
+        }
+        
+        .ph span {
+            font-size: 28px
+        }
+        
+        .ph small {
+            color: var(--mut);
+            font-size: 11px
+        }
+        
+        .th {
+            width: 31%;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid var(--bd);
+            background: var(--c2);
+            cursor: zoom-in
+        }
+        
+        .pg {
+            height: 6px;
+            border-radius: 6px;
+            background: var(--bd);
+            overflow: hidden
+        }
+        
+        .pg b {
+            display: block;
+            height: 100%;
+            background: var(--pri);
+            transition: width .3s
+        }
+        
+        .ck {
+            font-size: 13px;
+            color: var(--mut);
+            padding: 2px 0
+        }
+        
+        .ck.y {
+            color: var(--cy)
+        }
+        
+        .zm {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .92);
+            z-index: 9998;
+            display: grid;
+            place-items: center
+        }
+        
+        .zm img {
+            max-width: 96%;
+            max-height: 92%;
+            border-radius: 10px
+        }
+        
+        #ld {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            z-index: 9999;
+            display: none;
+            background: linear-gradient(90deg, transparent, var(--pri), var(--cy), transparent);
+            background-size: 50% 100%;
+            background-repeat: no-repeat;
+            animation: ld 1s linear infinite
+        }
+        
+        @keyframes ld {
+            from {
+                background-position: -50% 0
+            }
+            to {
+                background-position: 150% 0
+            }
+        }
+        
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 17, 24, .96);
+            border-top: 1px solid var(--bd);
+            display: flex;
+            justify-content: center;
+            padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0));
+            backdrop-filter: blur(10px);
+            z-index: 50
+        }
+        
+        nav button {
+            flex: 1;
+            max-width: 200px;
+            background: none;
+            border: 0;
+            color: var(--mut);
+            font: inherit;
+            font-size: 12px;
+            padding: 6px;
+            position: relative
+        }
+        
+        nav button span {
+            display: block;
+            font-size: 20px
+        }
+        
+        nav .on {
+            color: var(--pri2)
+        }
+        
+        nav .on span {
+            filter: drop-shadow(0 0 8px var(--pri))
+        }
+        
+        nav i {
+            position: absolute;
+            top: 2px;
+            right: 30%;
+            background: var(--red);
+            color: #fff;
+            font-style: normal;
+            font-size: 10px;
+            min-width: 16px;
+            border-radius: 8px;
+            padding: 0 4px
+        }
+        
+        #toast {
+            position: fixed;
+            top: calc(12px + env(safe-area-inset-top, 0));
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--pri);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 20px;
+            display: none;
+            z-index: 9999;
+            font-weight: 600;
+            box-shadow: var(--glow);
+            max-width: 92%;
+            text-align: center
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--bd);
+            border-radius: 12px;
+            background: var(--c2);
+            color: var(--tx);
+            font: inherit;
+            min-height: 90px;
+            resize: vertical
+        }
+        
+        textarea:focus {
+            outline: 0;
+            border-color: var(--pri);
+            box-shadow: var(--glow)
+        }
+        
+        .chip {
+            border: 0;
+            cursor: pointer;
+            font: inherit
+        }
+        
+        .chip.on {
+            background: var(--pri);
+            color: #fff
+        }
+    </style>
+</head>
+
+<body>
+    <div id="ld"></div>
+    <div class="w" id="app"></div>
+    <div id="toast"></div>
+    <script>
+        // عنوان الخادم: بيتوصّل لوحده من غير أي إعداد ومن غير رسائل للمستخدم (يجرّب: العنوان هنا ← آخر عنوان نجح ← نفس الدومين ← الجهاز نفسه localhost).
+        // لو الخادم مستضاف على الإنترنت حط عنوانه هنا مرة واحدة (https://...) وهيشتغل من أي جهاز أو تطبيق بدون روابط.
+        const API_URL = "https://waslni-production-e28fe835.up.railway.app";
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+        let API = "",
+            SRV = null,
+            CONN = null;
+        try {
+            localStorage.removeItem("api")
+        } catch (e) {}
+        const NOSRV = () => false;
+        const srvCands = () => {
+            const L = [],
+                add = u => {
+                    if (u != null && !L.includes(u)) L.push(u)
+                };
+            add(API_URL || null);
+            try {
+                add(localStorage.getItem("srv"))
+            } catch (e) {}
+            if (/^https?:$/.test(location.protocol)) add("");
+            [3000, 8080, 5000].forEach(p => {
+                add("http://localhost:" + p);
+                add("http://127.0.0.1:" + p)
+            });
+            return L
+        };
+        async function srvProbe(b) {
+            const c = new AbortController(),
+                t = setTimeout(() => c.abort(), 4000);
+            try {
+                const r = await fetch(b + "/health", {
+                        signal: c.signal,
+                        cache: "no-store"
+                    }),
+                    j = await r.json();
+                return r.ok && !!j && j.ok === true
+            } catch (e) {
+                return false
+            } finally {
+                clearTimeout(t)
+            }
+        }
+
+        function connect() {
+            if (CONN) return CONN;
+            CONN = (async() => {
+                for (let n = 0;; n++) {
+                    const L = srvCands(),
+                        res = await Promise.all(L.map(srvProbe)),
+                        i = res.indexOf(true);
+                    if (i >= 0) {
+                        API = L[i];
+                        SRV = true;
+                        try {
+                            localStorage.setItem("srv", API)
+                        } catch (e) {}
+                        CONN = null;
+                        if (busy <= 0) $("#ld").style.display = "none";
+                        return true
+                    }
+                    SRV = false;
+                    $("#ld").style.display = "block";
+                    await sleep(Math.min(800 + n * 700, 5000))
+                }
+            })();
+            CONN.then(() => {
+                if (typeof onSrv == "function") onSrv()
+            });
+            return CONN
+        }
+        const srvReady = async ms => {
+            if (SRV === true) return true;
+            const p = connect();
+            return Promise.race([p, sleep(ms).then(() => false)])
+        };
+        const netErr = () => {
+            const e = new Error("حصلت مشكلة مؤقتة، جرّب تاني بعد لحظات");
+            e.net = true;
+            return e
+        };
+        const $ = s => document.querySelector(s),
+            esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;"
+            }[c]));
+        const ar2en = s => String(s || "").replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/\D/g, "");
+        const money = n => Math.round(Number(n) * 100) / 100 + " ج.م",
+            HAS = typeof L !== "undefined",
+            vib = () => navigator.vibrate && navigator.vibrate(30);
+        const ST = {
+            bidding: "مفتوح للعروض",
+            accepted: "في الطريق للاستلام",
+            picked_up: "في الطريق للتسليم",
+            delivered: "تم التسليم",
+            cancelled: "ملغي"
+        };
+        const VEH = {
+            scooter: "🛵 موتوسيكل",
+            bike: "🚲 دراجة",
+            car: "🚗 سيارة",
+            walk: "🚶 مشي"
+        };
+        const GOV = {
+            "01": "القاهرة",
+            "02": "الإسكندرية",
+            "03": "بورسعيد",
+            "04": "السويس",
+            "11": "دمياط",
+            "12": "الدقهلية",
+            "13": "الشرقية",
+            "14": "القليوبية",
+            "15": "كفر الشيخ",
+            "16": "الغربية",
+            "17": "المنوفية",
+            "18": "البحيرة",
+            "19": "الإسماعيلية",
+            "21": "الجيزة",
+            "22": "بني سويف",
+            "23": "الفيوم",
+            "24": "المنيا",
+            "25": "أسيوط",
+            "26": "سوهاج",
+            "27": "قنا",
+            "28": "أسوان",
+            "29": "الأقصر",
+            "31": "البحر الأحمر",
+            "32": "الوادي الجديد",
+            "33": "مطروح",
+            "34": "شمال سيناء",
+            "35": "جنوب سيناء",
+            "88": "خارج الجمهورية"
+        };
+        const LOGO = (s, t = 1) => `<span class="logo" style="font-size:${s}px"><em>🛵</em>${t?"وصّلني":""}</span>`;
+        const hi = () => new Date().getHours() < 12 ? "صباح الخير" : "مساء الخير";
+        const nidInfo = n => {
+            if (!/^[23]\d{13}$/.test(n)) return null;
+            const y = (n[0] == "2" ? 1900 : 2000) + +n.slice(1, 3),
+                m = +n.slice(3, 5),
+                d = +n.slice(5, 7),
+                t = new Date(Date.UTC(y, m - 1, d));
+            if (t.getUTCFullYear() != y || t.getUTCMonth() != m - 1 || t.getUTCDate() != d || !GOV[n.slice(7, 9)]) return null;
+            const a = (Date.now() - t) / 31557600000;
+            if (a < 18 || a > 75) return null;
+            return {
+                y,
+                m,
+                d,
+                g: GOV[n.slice(7, 9)],
+                f: (+n[12]) % 2 == 0
+            }
+        };
+        const freshV = () => ({
+            nid: "",
+            front: null,
+            back: null,
+            selfie: null,
+            veh: "scooter",
+            plate: "",
+            agree: false,
+            open: false
+        });
+        let U = null,
+            ME = null,
+            tok = "",
+            tab = "",
+            mode = "login",
+            RL = "customer",
+            AF = {
+                nm: "",
+                ph: "",
+                pw: "",
+                ac: ""
+            },
+            CFG = {
+                rate: 10
+            },
+            V = freshV(),
+            BD = {};
+        let D = {
+                orders: [],
+                bids: {},
+                open: [],
+                track: {},
+                stats: null,
+                ver: []
+            },
+            PL = null,
+            DL = null,
+            F = {
+                ti: "",
+                pa: "",
+                da: "",
+                sp: 40
+            },
+            rated = [],
+            MD = {},
+            MAPS = {},
+            last = "",
+            prev = {},
+            busy = 0,
+            IC = {},
+            IP = {};
+        try {
+            tok = localStorage.getItem("tok") || "";
+            U = JSON.parse(localStorage.getItem("usr") || "null");
+            rated = JSON.parse(localStorage.getItem("rated") || "[]")
+        } catch (e) {}
+        if (U) tab = U.role == "courier" ? "open" : U.role == "admin" ? "stats" : "mine";
+        let AD = {
+                days: 30,
+                dash: null,
+                orders: [],
+                oq: "",
+                os: "",
+                om: false,
+                users: [],
+                uf: "all",
+                uq: "",
+                um: false,
+                comp: [],
+                audit: [],
+                badge: {
+                    ver: 0,
+                    complaints: 0
+                }
+            },
+            NT = [],
+            EX = null,
+            AA = [],
+            CP = [],
+            TT = {};
+        const freshOT = () => ({
+            sent: false,
+            phone: "",
+            code: "",
+            token: "",
+            wait: 0
+        });
+        let PF = null,
+            AV = null,
+            OT = freshOT();
+        const due = (k, ms = 15000) => {
+            const n = Date.now();
+            if (TT[k] && n - TT[k] < ms) return false;
+            TT[k] = n;
+            return true
+        };
+        const fmtN = n => Number(n || 0).toLocaleString("en-US", {
+                maximumFractionDigits: 1
+            }),
+            dt = x => x ? new Date(x).toLocaleString("ar-EG", {
+                day: "numeric",
+                month: "short",
+                hour: "2-digit",
+                minute: "2-digit"
+            }) : "";
+        const RN = {
+                customer: "عميل",
+                courier: "مندوب",
+                admin: "إدارة"
+            },
+            VS = {
+                pending: "قيد المراجعة",
+                approved: "موثّق",
+                rejected: "مرفوض"
+            },
+            CT = {
+                delay: "تأخير",
+                behavior: "سلوك غير لائق",
+                damaged: "تلف أو فقد",
+                payment: "مشكلة في الدفع",
+                other: "أخرى"
+            };
+        const AUD = {
+            commission: "غيّر العمولة",
+            verify_approve: "وافق على توثيق",
+            verify_reject: "رفض توثيق",
+            block: "أوقف حساب",
+            unblock: "رفع إيقاف",
+            cancel_order: "ألغى طلب",
+            resolve_complaint: "عالج بلاغ",
+            export: "صدّر ملف"
+        };
+
+        function go(t) {
+            tab = t;
+            TT = {};
+            refresh()
+        }
+        // نافذة سفلية موحّدة للإدخال والتأكيد
+        function sheet(t, body, ok, label = "تأكيد") {
+            const d = document.createElement("div");
+            d.className = "zm";
+            d.style.alignItems = "end";
+            d.innerHTML = `<div class="card" style="width:100%;max-width:560px;border-radius:20px 20px 0 0;margin:0;padding-bottom:calc(14px + env(safe-area-inset-bottom,0))"><b>${t}</b>${body}<div class="g" style="margin-top:12px"><button class="b l" id="sx" style="margin:0">إلغاء</button><button class="b" id="so" style="margin:0">${label}</button></div></div>`;
+            document.body.appendChild(d);
+            d.querySelector("#sx").onclick = () => d.remove();
+            d.onclick = e => {
+                if (e.target == d) d.remove()
+            };
+            d.querySelector("#so").onclick = () => run(async() => {
+                await ok(d);
+                d.remove()
+            })
+        }
+
+        function toast(m) {
+            const t = $("#toast");
+            t.textContent = m;
+            t.style.display = "block";
+            clearTimeout(t.h);
+            t.h = setTimeout(() => t.style.display = "none", 3200)
+        }
+        async function api(path, method = "GET", body) {
+            busy++;
+            $("#ld").style.display = "block";
+            try {
+                for (let a = 0;; a++) {
+                    if (!(await srvReady(25000))) throw netErr();
+                    let r;
+                    try {
+                        r = await fetch(API + path, {
+                            method,
+                            headers: {
+                                "Content-Type": "application/json",
+                                ...(tok ? {
+                                    Authorization: "Bearer " + tok
+                                } : {})
+                            },
+                            body: body ? JSON.stringify(body) : undefined
+                        })
+                    } catch (e) {
+                        if (!(e instanceof TypeError)) throw e;
+                        SRV = false;
+                        connect();
+                        if (method != "GET" || a >= 2) throw netErr();
+                        continue
+                    } // انقطاع: بنعيد البحث عن الخادم بصمت (وما بنعيدش إرسال عمليات الكتابة عشان ما تتكررش)
+                    if (r.status == 502 || r.status == 503 || (r.status == 504 && method == "GET")) {
+                        SRV = false;
+                        connect();
+                        if (a >= 2) throw netErr();
+                        await sleep(1500);
+                        continue
+                    } // الخادم بيصحى/بيتحدّث
+                    const j = await r.json().catch(() => ({}));
+                    if (r.status == 401 && tok) {
+                        logout();
+                        throw new Error("سجّل الدخول تاني")
+                    }
+                    if (!r.ok) {
+                        const e = new Error(r.status >= 500 ? "حصلت مشكلة مؤقتة، جرّب تاني بعد لحظات" : (j.error || "حصل خطأ"));
+                        e.code = j.code;
+                        throw e
+                    }
+                    return j
+                }
+            } finally {
+                if (--busy <= 0 && SRV !== false) $("#ld").style.display = "none"
+            }
+        }
+        const run = async f => {
+            try {
+                await f()
+            } catch (e) {
+                toast(e.message)
+            }
+        };
+
+        function logout() {
+            tok = "";
+            U = ME = PF = null;
+            V = freshV();
+            try {
+                localStorage.removeItem("tok");
+                localStorage.removeItem("usr")
+            } catch (e) {}
+            render(true)
+        }
+        // صور محمية: بتتحمّل بالتوكن وتتخزن مؤقتًا
+        const im = (u, c = "") => `<img class="${c}" alt="" ${IC[u]?`src="${IC[u]}"`:`data-src="${u}"`}>`;
+function hydrate(){document.querySelectorAll("img[data-src]").forEach(el=>{const u=el.dataset.src;
+ (IP[u]=IP[u]||fetch(API+u,{headers:{Authorization:"Bearer "+tok}}).then(r=>r.ok?r.blob():Promise.reject()).then(b=>IC[u]=URL.createObjectURL(b)).catch(()=>""))
+ .then(s=>{if(s){el.src=s;el.removeAttribute("data-src")}})})}
+const zoom=s=>{if(!s)return;const d=document.createElement("div");d.className="zm";d.innerHTML=`<img src="${s}">`;d.onclick=()=>d.remove();document.body.appendChild(d)};
+const av=(id,name)=>`<span style="position:relative;display:inline-block;cursor:pointer" onclick="viewProfile('${id}')">${im(`/photo/face/${id}`,"av")}</span>`;
+
+// ---------- الإشعارات ----------
+async function initPush(){const P=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.PushNotifications;if(!P)return;
+ try{const r=await P.requestPermissions();if(r.receive!=="granted")return;
+  P.addListener("registration",t=>api("/me/push-token","POST",{token:t.value}).catch(()=>{}));
+  P.addListener("pushNotificationReceived",n=>toast((n.title||"")+" "+(n.body||"")));await P.register()}catch(e){}}
+
+// ---------- الخرائط ----------
+function mapFor(k){if(MAPS[k])return MAPS[k];const el=document.createElement("div");el.className="map";
+ const m=L.map(el,{zoomControl:false}).setView([30.04,31.24],11);
+L.tileLayer(
+  "https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=cb1_5d8a_1_acec3c4c2a7d1f1f446dfe51",
+  {
+    maxZoom: 19,
+    attribution: "© OpenStreetMap © CARTO"
+  }
+).addTo(m);
+ if(k=="pick")m.on("click",e=>pickAt(e.latlng));return MAPS[k]={el,m,g:L.layerGroup().addTo(m)}}
+function draw(k,e){const d=MD[k]||{},pts=[];e.g.clearLayers();
+ const mk=(p,c,t)=>{if(p&&p[0]!=null&&p[0]!==""){const q=[+p[0],+p[1]];pts.push(q);L.marker(q,{icon:L.divIcon({className:"",html:`<div class="pin ${c}">${t}</div>`,iconSize:[30,30],iconAnchor:[15,15]})}).addTo(e.g)}};
+ mk(d.p,"a","A");mk(d.d,"b","B");mk(d.c,"c","🛵");
+ if(d.p&&d.d&&d.p[0]!=null&&d.d[0]!=null)L.polyline([[+d.p[0],+d.p[1]],[+d.d[0],+d.d[1]]],{color:"#2E6BFF",weight:3,dashArray:"6 8"}).addTo(e.g);
+ if(pts.length)e.m.fitBounds(pts,{padding:[34,34],maxZoom:16})}
+const slot=(k,d)=>{if(!HAS)return"";MD[k]=d;return `<div data-map="${k}" class="map"></div>`};
+function mountMaps(){if(!HAS)return;document.querySelectorAll("[data-map]").forEach(ph=>{const k=ph.dataset.map,e=mapFor(k);ph.replaceWith(e.el);setTimeout(()=>{e.m.invalidateSize();draw(k,e)},60)})}
+async function rev(a,b){try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&accept-language=ar&lat=${a}&lon=${b}`);const j=await r.json();return(j.display_name||"").split("،").slice(0,3).join("،")}catch(e){return""}}
+function pickAt(ll){const v=[ll.lat,ll.lng];vib();
+ if(!PL||DL){PL=v;DL=null;F.pa="";F.da="";rev(v[0],v[1]).then(a=>{F.pa=a;render(true)})}else{DL=v;rev(v[0],v[1]).then(a=>{F.da=a;render(true)})}render(true)}
+const useMe=()=>navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>pickAt({lat:p.coords.latitude,lng:p.coords.longitude}),()=>toast("اسمح بالوصول للموقع من إعدادات الجهاز"),{enableHighAccuracy:true}):toast("الموقع غير مدعوم");
+const hav=(a,b)=>{const r=x=>x*Math.PI/180,q=Math.sin(r(b[0]-a[0])/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(r(b[1]-a[1])/2)**2;return +(12742*Math.asin(Math.sqrt(q))).toFixed(1)};
+
+// ---------- الدخول والتسجيل ----------
+function checkSrv(){connect()}
+const srvBox=()=>"";   // ما بنعرضش أي رسالة عن الخادم: الاتصال تلقائي وصامت
+function authSubmit(){run(async()=>{const phone=ar2en(AF.ph);
+ if(!/^01[0125]\d{8}$/.test(phone))throw new Error("رقم الموبايل لازم يبدأ بـ 01 ويتكون من 11 رقم");
+ if(mode=="reg"&&AF.nm.trim().length<2)throw new Error("اكتب اسمك");
+ if(AF.pw.length<6)throw new Error("كلمة المرور 6 أحرف على الأقل");
+ const body={phone,password:AF.pw};if(mode=="reg"){body.name=AF.nm.trim();body.role=RL;if(RL=="admin"){if(!AF.ac)throw new Error("اكتب كود الإدارة");body.admin_code=AF.ac}}
+ if(mode=="reg"&&RL!="admin"){if(!OT.token){await sendOtp(phone);return}body.otp_token=OT.token}
+ let j;try{j=await api(mode=="reg"?"/auth/register":"/auth/login","POST",body)}catch(e){if(e.code=="PHONE_NOT_VERIFIED"){OT=freshOT();render(true)}throw e}
+ tok=j.token;U=j.user;AF.pw="";AF.ac="";OT=freshOT();
+ try{localStorage.setItem("tok",tok);localStorage.setItem("usr",JSON.stringify(U))}catch(e){}
+ tab=U.role=="courier"?"open":U.role=="admin"?"stats":"mine";
+ if(mode=="reg"&&U.role=="courier"){tab="me";V.open=true;toast("خطوة أخيرة: وثّق حسابك عشان تبدأ")}
+ initPush();await refresh()})}
+async function sendOtp(phone){const j=await api("/auth/otp/send","POST",{phone});OT={sent:true,phone,code:"",token:"",wait:j.resend_in||60};render(true);setTimeout(()=>{const e=$("#otpc");e&&e.focus()},60)}
+const otpResend=()=>run(async()=>{await sendOtp(OT.phone);toast("تم إرسال كود جديد")});
+const otpConfirm=()=>run(async()=>{if(!/^\d{6}$/.test(OT.code))throw new Error("اكتب الكود من 6 أرقام");const j=await api("/auth/otp/verify","POST",{phone:OT.phone,code:OT.code});OT.token=j.otp_token;authSubmit()});
+setInterval(()=>{if(OT.sent&&OT.wait>0){OT.wait--;const b=$("#rs");if(b){b.disabled=OT.wait>0;b.textContent=OT.wait>0?`إعادة الإرسال بعد ${OT.wait} ث`:"إعادة إرسال الكود"}}},1000);
+const otpView=()=>`<div class="c" style="margin:34px 0 14px">${LOGO(40)}</div><div class="card"><b>تأكيد رقم الموبايل</b><div class="sub" style="margin-top:6px">بعتنالك رسالة فيها كود من 6 أرقام على <span class="num" style="direction:ltr;display:inline-block">${esc(OT.phone)}</span></div><label>كود التحقق</label><input class="num" id="otpc" type="tel" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="••••••" value="${esc(OT.code)}" oninput="OT.code=ar2en(this.value).slice(0,6)" onkeydown="if(event.key=='Enter')otpConfirm()"><button class="b" onclick="otpConfirm()">تأكيد وإنشاء الحساب</button><button class="b l" id="rs" onclick="otpResend()" ${OT.wait>0?"disabled":""}>${OT.wait>0?`إعادة الإرسال بعد ${OT.wait} ث`:"إعادة إرسال الكود"}</button><div class="c" style="margin-top:10px"><a class="sub" style="cursor:pointer;text-decoration:underline" onclick="OT=freshOT();render(true)">تعديل رقم الموبايل</a></div>${srvBox()}</div>`;
+const authView=()=>(mode=="reg"&&RL!="admin"&&OT.sent)?otpView():authView0();
+const authView0=()=>`<div class="c" style="margin:34px 0 14px">${LOGO(40)}<div class="sub" style="margin-top:6px">وصّل أي حاجة… بالسعر اللي يناسبك</div></div>
+<div class="card"><b>${mode=="reg"?(RL=="admin"?"تسجيل حساب إدارة":"إنشاء حساب جديد"):"أهلًا بيك تاني 👋"}</b>
+${mode=="reg"?(RL=="admin"?`<div class="sub" style="margin-top:6px">🔐 التسجيل كإدارة محتاج كود الإدارة السري.</div>`:`<label>أنا</label><div class="rc"><button class="${RL=="customer"?"on":""}" onclick="RL='customer';render(true)"><span>📦</span>عميل<div class="sub">عايز أوصّل</div></button><button class="${RL=="courier"?"on":""}" onclick="RL='courier';render(true)"><span>🛵</span>مندوب<div class="sub">هوصّل للناس</div></button></div>${RL=="courier"?`<div class="sub" style="margin-top:8px">🪪 بعد التسجيل هتوثّق هويتك: الرقم القومي + صورة البطاقة (وش وضهر) + سيلفي.</div>`:""}`)+`<label>الاسم</label><input value="${esc(AF.nm)}" oninput="AF.nm=this.value" autocomplete="name" enterkeyhint="next">`:""}
+<label>رقم الموبايل</label><input class="num" type="tel" inputmode="numeric" maxlength="14" placeholder="01XXXXXXXXX" value="${esc(AF.ph)}" oninput="AF.ph=this.value" autocomplete="tel" enterkeyhint="next">
+<label>كلمة المرور</label><div class="pwr"><input id="pw" type="password" value="${esc(AF.pw)}" oninput="AF.pw=this.value" onkeydown="if(event.key=='Enter')authSubmit()" autocomplete="${mode=="reg"?"new-password":"current-password"}" enterkeyhint="go"><button onclick="const i=$('#pw');i.type=i.type=='password'?'text':'password'">👁</button></div>
+${mode=="reg"&&RL=="admin"?`<label>كود الإدارة</label><input type="password" value="${esc(AF.ac)}" oninput="AF.ac=this.value" autocomplete="off">`:""}
+<button class="b" onclick="authSubmit()">${mode=="reg"&&RL!="admin"?"إرسال كود التحقق":mode=="reg"?"إنشاء الحساب":"دخول"}</button>
+<button class="b l" onclick="mode='${mode=="reg"?"login":"reg"}';RL='customer';render(true)">${mode=="reg"?"عندي حساب بالفعل":"مستخدم جديد؟ سجّل"}</button>
+${mode=="reg"?`<div class="c" style="margin-top:10px"><a class="sub" style="cursor:pointer;text-decoration:underline" onclick="RL='${RL=="admin"?"customer":"admin"}';render(true)">${RL=="admin"?"رجوع للتسجيل العادي":"تسجيل كإدارة (بكود سري)"}</a></div>`:""}${srvBox()}</div>`;
+
+// ---------- التوثيق ----------
+const vState=()=>ME&&ME.v_status;const vOK=()=>vState()=="approved";
+const vDone=()=>[V.nid.length==14&&nidInfo(V.nid),V.front,V.back,V.selfie,V.agree&&(U.role!="courier"||V.veh)].filter(Boolean).length;
+const tile=(k,t,h,cap)=>`<label class="ph ${V[k]?"ok":""}"><input type="file" accept="image/*" ${cap?`capture="${cap}"`:""} hidden onchange="pickImg('${k}',this)">${V[k]?`<img src="${V[k]}">`:`<span>📷</span>`}<b>${t}</b><small>${V[k]?"اضغط للتغيير":h}</small></label>`;
+function vUpd(){const n=vDone();const p=$("#vp");if(p){p.firstChild.style.width=n*20+"%";$("#vn").textContent=n+" من 5";$("#vs").disabled=n<5}}
+function nidIn(el){V.nid=ar2en(el.value).slice(0,14);el.value=V.nid;const i=nidInfo(V.nid),h=$("#nh");
+ h.className="ck"+(i?" y":"");h.textContent=i?`✓ مواليد ${i.d}/${i.m}/${i.y} • ${i.g} • ${i.f?"أنثى":"ذكر"}`:V.nid.length==14?"✗ الرقم غير صحيح — راجع الأرقام":`باقي ${14-V.nid.length} رقم`;vUpd()}
+function shrink(f,max=1280){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>{if(Math.max(im.width,im.height)<600)return no(new Error("الصورة صغيرة وغير واضحة، قرّب الكاميرا وصوّر تاني"));
+ const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.8))};im.onerror=()=>no(new Error("تعذّر قراءة الصورة"));im.src=URL.createObjectURL(f)})}
+async function pickImg(k,inp){const f=inp.files[0];if(!f)return;try{V[k]=await shrink(f);render(true)}catch(e){toast(e.message)}}
+function verifyForm(){const n=vDone(),cr=U.role=="courier";
+ return `<div class="card"><div class="r"><b>توثيق الهوية</b><button class="b s l" onclick="V.open=false;render(true)">رجوع</button></div>
+<div class="sub">بنتأكد إنك شخص حقيقي عشان أمان الجميع. بياناتك مشفّرة ومش بتظهر لأي مستخدم تاني.</div>
+<div class="r" style="margin:10px 0 4px"><span class="sub">اكتمل</span><span class="sub" id="vn">${n} من 5</span></div><div class="pg" id="vp"><b style="width:${n*20}%"></b></div>
+<label>الرقم القومي (14 رقم)</label><input class="num" inputmode="numeric" maxlength="14" value="${V.nid}" oninput="nidIn(this)" placeholder="٢٩٥٠٣١٢١٢٠١٢٣٤"><div id="nh" class="ck">${V.nid?"":"اكتب الرقم زي ما هو مكتوب في البطاقة"}</div>
+<label>صور واضحة وكاملة (من غير فلاش أو انعكاس)</label>
+<div class="g">${tile("front","وش البطاقة","الصورة الأمامية")}${tile("back","ضهر البطاقة","الصورة الخلفية")}</div>
+<label>صورتك الشخصية الآن</label><div class="g">${tile("selfie","سيلفي","وشك واضح من غير نظارة","user")}<div class="sub" style="align-self:center">• إضاءة كويسة<br>• وشك بالكامل في الصورة<br>• السيلفي بتتصوّر دلوقتي بالكاميرا</div></div>
+${cr?`<label>نوع المركبة</label><select onchange="V.veh=this.value;vUpd()">${Object.entries(VEH).map(([k,v])=>`<option value="${k}" ${V.veh==k?"selected":""}>${v}</option>`).join("")}</select><label>رقم اللوحة (اختياري)</label><input value="${esc(V.plate)}" oninput="V.plate=this.value">`:""}
+<label style="display:flex;gap:8px;align-items:flex-start;color:var(--tx);margin-top:14px"><input type="checkbox" style="width:auto;margin-top:5px" ${V.agree?"checked":""} onchange="V.agree=this.checked;vUpd()"><span>أوافق على استخدام بياناتي وصوري للتحقق من هويتي فقط.</span></label>
+<button class="b" id="vs" ${n<5?"disabled":""} onclick="sendV()">إرسال للمراجعة</button></div>`}
+const sendV=()=>run(async()=>{await api("/verification","POST",{national_id:V.nid,id_front:V.front,id_back:V.back,selfie:V.selfie,vehicle_type:U.role=="courier"?V.veh:null,plate:V.plate});
+ V=freshV();toast("تم إرسال طلبك ✅ هنبلغك بالنتيجة");await refresh()});
+function meView(){const m=ME||{},s=vState();
+ let h=`<div class="card c">${(PF&&PF.has_avatar)||s=="approved"?im(`/photo/face/${U.id}${PF&&PF.avatar_v?"?v="+PF.avatar_v:""}`,"av big"):`<span class="av big">${esc((U.name||"?")[0])}</span>`}<h3 style="margin:8px 0 0">${esc(U.name)} ${m.is_verified?`<span class="vb">✔ موثّق</span>`:""}</h3><div class="sub">${esc(U.phone)} • ${{courier:"مندوب",admin:"إدارة",customer:"عميل"}[U.role]}</div>${m.rating_count>0?`<div>⭐ ${Number(m.rating_avg).toFixed(1)} <span class="sub">(${m.rating_count} تقييم)</span></div>`:""}${PF&&PF.bio?`<div class="sub" style="margin-top:6px">${esc(PF.bio)}</div>`:""}</div>`;
+ if(U.role!="admin"){if(V.open)return h+verifyForm();
+  const box=(t,x,btn)=>`<div class="card"><b>${t}</b><div class="sub" style="margin-top:4px">${x}</div>${btn?`<button class="b" onclick="V.open=true;render(true)">${btn}</button>`:""}</div>`;
+  h+=s=="approved"?box("✅ حسابك موثّق","الناس بتشوف علامة التوثيق جنب اسمك وده بيزوّد الثقة."):s=="pending"?box("⏳ طلبك قيد المراجعة","بنراجع بياناتك وغالبًا بتخلص خلال 24 ساعة. هيجيلك إشعار أول ما نخلص."):
+   s=="rejected"?box("❌ طلب التوثيق اتّرفض",`السبب: ${esc(m.reject_reason||"-")}`,"أعد الإرسال"):
+   box(U.role=="courier"?"🔒 وثّق حسابك عشان تقدّم عروض":"🛡️ وثّق حسابك (اختياري)",U.role=="courier"?"لازم توثيق الهوية قبل ما تقدر تشتغل. بياخد دقيقتين.":"التوثيق بيخلي المناديب يثقوا فيك ويردّوا أسرع.","ابدأ التوثيق")}
+ return h+meExtra()+`<button class="b l" onclick="logout()">تسجيل الخروج</button>`}
+
+// ---------- الشاشات ----------
+function nav(){const bg=AD.badge,T=U.role=="courier"?[["open","🏍️","فرص"],["jobs","📍","مشاويري"],["me","👤","حسابي"]]:U.role=="admin"?[["stats","📊","اللوحة"],["orders","📦","الطلبات"],["users","👥","الأعضاء"],["ver","🪪","التوثيق",bg.ver],["me","⚙️","المزيد",bg.complaints]]:[["mine","📦","طلباتي"],["new","➕","طلب جديد"],["me","👤","حسابي"]];
+ return `<nav>${T.map(t=>`<button class="${tab==t[0]?"on":""}" onclick="go('${t[0]}')"><span>${t[1]}</span>${t[2]}${t[3]?`<i>${t[3]}</i>`:t[0]=="me"&&U.role!="admin"&&ME&&(!vState()||vState()=="rejected")?"<i>!</i>":""}</button>`).join("")}</nav>`}
+function banner(){return U.role=="courier"&&ME&&!vOK()?`<div class="card" style="border-color:var(--pri)"><b>${vState()=="pending"?"⏳ توثيقك قيد المراجعة":"🔒 محتاج توثيق الهوية"}</b><div class="sub">${vState()=="pending"?"هتقدر تقدّم عروض أول ما نوافق على طلبك.":"لازم توثّق حسابك قبل تقديم العروض."}</div>${vState()=="pending"?"":`<button class="b" onclick="tab='me';V.open=true;refresh()">وثّق الآن</button>`}</div>`:""}
+function cbanner(){return U.role=="customer"&&ME&&!vState()?`<div class="card" style="border-color:var(--pri)"><b>🛡️ وثّق حسابك بالرقم القومي</b><div class="sub">اختياري — بيخلي المناديب يثقوا فيك ويردّوا أسرع.</div><button class="b" onclick="tab='me';V.open=true;refresh()">أضف الرقم القومي والصور</button></div>`:""}
+function view(){const un=ME&&+ME.unread||0;
+ return `<div class="r hd">${LOGO(24)}<div class="r" style="gap:10px"><div class="sub">${hi()} ${esc(U.name.split(" ")[0])}</div><button class="ic" style="position:relative;width:38px;height:38px;font-size:17px" onclick="go('notif')">🔔${un?`<i style="position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-style:normal;font-size:10px;min-width:16px;border-radius:8px;text-align:center">${un}</i>`:""}</button></div></div>`+(U.role!="admin"?roleBar():"")+
+ (tab=="notif"?notifView():tab=="me"?(U.role=="admin"?adminMore():meView()):U.role=="admin"?(tab=="ver"?verView():tab=="orders"?aOrders():tab=="users"?aUsers():dashView()):U.role=="courier"?banner()+vbanner()+(tab=="open"?openView():jobsView()):(cbanner()+(tab=="new"?newView():custView())))+nav()}
+const chips=k=>AA.length?`<div class="r" style="justify-content:flex-start;flex-wrap:wrap;gap:6px;margin-top:6px">${AA.map(a=>`<button class="t chip" onclick="useAddr('${k}','${a.id}')">⭐ ${esc(a.label)}</button>`).join("")}</div>`:"";
+const newView=()=>`<div class="card"><b>طلب توصيل جديد</b><div class="sub">اضغط على الخريطة لتحديد الاستلام (A) ثم التسليم (B)</div>${slot("pick",{p:PL,d:DL})}
+<button class="b s l" style="margin-top:8px" onclick="useMe()">📍 استخدم موقعي</button>
+<label>إيه اللي هتوصّله؟</label><input value="${esc(F.ti)}" oninput="F.ti=this.value" placeholder="مثلاً: مفاتيح، طرد، أكل…">
+<div class="r" style="margin-top:10px"><span class="sub">من (الاستلام)</span><a class="sub" style="cursor:pointer;text-decoration:underline" onclick="saveAddr('P')">💾 احفظ</a></div><input value="${esc(F.pa)}" oninput="F.pa=this.value">${chips("P")}
+<div class="r" style="margin-top:10px"><span class="sub">إلى (التسليم)</span><a class="sub" style="cursor:pointer;text-decoration:underline" onclick="saveAddr('D')">💾 احفظ</a></div><input value="${esc(F.da)}" oninput="F.da=this.value">${chips("D")}
+<label>سعرك المقترح (ج.م) — المناديب هيقدموا عروضهم</label><input class="num" type="number" inputmode="decimal" value="${F.sp}" oninput="F.sp=this.value">
+${PL&&DL?`<div class="sub" style="margin-top:6px">المسافة التقريبية: ${hav(PL,DL)} كم</div>`:""}<button class="b" onclick="addOrder()">انشر الطلب</button></div>`;
+function useAddr(k,id){const a=AA.find(x=>x.id==id);if(!a)return;const v=a.lat!=null?[+a.lat,+a.lng]:null;if(k=="P"){F.pa=a.address;if(v)PL=v}else{F.da=a.address;if(v)DL=v}vib();render(true)}
+const saveAddr=k=>{const addr=(k=="P"?F.pa:F.da).trim(),v=k=="P"?PL:DL;if(!addr)return toast("اكتب العنوان الأول");
+ sheet("حفظ العنوان",`<label>اسم العنوان</label><input id="al" placeholder="البيت، الشغل…" maxlength="30">`,async d=>{await api("/addresses","POST",{label:d.querySelector("#al").value.trim()||"عنوان",address:addr,lat:v&&v[0],lng:v&&v[1]});TT={};toast("تم الحفظ ⭐");await refresh()})};
+const delAddr=id=>run(async()=>{await api(`/addresses/${id}`,"DELETE");TT={};await refresh()});
+const call=(n,p)=>`<a class="ic" style="display:grid;place-items:center;text-decoration:none" href="tel:${esc(p)}" title="اتصل بـ ${esc(n)}">📞</a>`;
+function custView(){if(!D.orders.length)return `<div class="e">📭<br>لسه معندكش طلبات<br><button class="b s" style="margin-top:12px" onclick="tab='new';refresh()">اعمل أول طلب</button></div>`;
+ return D.orders.map(o=>{const t=D.track[o.id],s=["accepted","picked_up","delivered"].indexOf(o.status);
+  let h=`<div class="card"><div class="r"><b>${esc(o.title)}</b><span class="t ${o.status=="delivered"?"ok":""}">${ST[o.status]}</span></div><div class="sub">${esc(o.pickup_address)} ← ${esc(o.dropoff_address)}${o.distance_km?" • "+o.distance_km+" كم":""}</div>`;
+  if(o.status=="bidding"){const b=D.bids[o.id]||[];h+=b.length?`<div class="sub" style="margin-top:8px">${b.length} عرض — اختار الأنسب:</div>`+b.map(x=>`<div class="bid"><div class="r" style="gap:10px;justify-content:flex-start">${av(x.courier_id)}<div><b>${esc(x.name)}</b> ${x.is_verified?`<span class="vb">✔ موثّق</span>`:""}<div class="sub">⭐${Number(x.rating_avg).toFixed(1)} • ${VEH[x.vehicle_type]||""} • ${x.eta_minutes} د</div></div></div><div style="text-align:left"><div class="p">${money(x.price)}</div><button class="b s" onclick="accept('${o.id}','${x.id}')">اقبل</button></div></div>`).join(""):`<div class="e">⏳ بنستنى عروض المناديب…<br><span class="sub">هيجيلك إشعار أول ما يوصل عرض</span></div>`}
+  else if(o.status=="cancelled"){h+=`<div class="sub" style="margin-top:6px">❌ سبب الإلغاء: ${esc(o.cancel_reason||"-")}</div>`}else{h+=`<div class="stp">${[0,1,2].map(i=>`<i class="${i<=s?"on":""}"></i>`).join("")}</div><div class="r" style="margin-top:10px"><div class="r" style="gap:10px;justify-content:flex-start">${av(o.courier_id)}<div><b>${esc(o.courier_name||"")}</b><div class="sub">⭐${Number(o.courier_rating||0).toFixed(1)} • ${money(o.final_price)}</div></div></div>${o.courier_phone?call(o.courier_name,o.courier_phone):""}</div>`;
+   if(o.status!="delivered"){if(o.pickup_lat!=null)h+=slot("o"+o.id,{p:[o.pickup_lat,o.pickup_lng],d:[o.dropoff_lat,o.dropoff_lng],c:t&&t.courier_location&&[t.courier_location.lat,t.courier_location.lng]});
+    h+=`<div class="r" style="margin-top:10px"><span class="sub">كود التسليم — قوله للمندوب وقت الاستلام:</span><span class="code">${o.delivery_code}</span></div>`}
+   else if(!rated.includes(o.id))h+=`<div class="r" style="margin-top:10px"><span>قيّم المندوب:</span><span>${[1,2,3,4,5].map(n=>`<span style="font-size:28px;cursor:pointer;color:var(--cy)" onclick="rate('${o.id}',${n})">☆</span>`).join("")}</span></div>`}
+  return h+orderActs(o,"c")+"</div>"}).join("")}
+const netTxt=p=>`صافي ربحك: <b style="color:var(--cy)">${money(p*(1-CFG.rate/100))}</b> (بعد عمولة ${CFG.rate}%)`;
+const openView=()=>!D.open.length?`<div class="e">🔍<br>مفيش طلبات مفتوحة دلوقتي<br><span class="sub">هيجيلك إشعار أول ما ينزل طلب جديد</span></div>`:D.open.map(o=>{const v=BD[o.id]??Number(o.suggested_price);
+ return `<div class="card"><div class="r"><b>${esc(o.title)} ${o.customer_verified?`<span class="vb">✔</span>`:""}</b>${o.distance_km?`<span class="t">${o.distance_km} كم</span>`:""}</div><div class="sub">${esc(o.pickup_address)} ← ${esc(o.dropoff_address)}</div><div class="sub">مقترح العميل: ${money(o.suggested_price)} • أقل عرض: ${o.lowest_bid?money(o.lowest_bid):"—"}</div>
+ <div class="r" style="margin-top:10px"><button class="ic" onclick="stepBid('${o.id}',-5)">−</button><input class="num" id="bp${o.id}" type="number" inputmode="decimal" value="${v}" oninput="BD['${o.id}']=this.value;net('${o.id}')" style="text-align:center"><button class="ic" onclick="stepBid('${o.id}',5)">+</button><button class="b s" onclick="bid('${o.id}')">قدّم</button></div><div class="sub" id="nt${o.id}" style="margin-top:6px">${netTxt(v)}</div></div>`}).join("");
+const net=id=>{const e=$("#nt"+id);if(e)e.innerHTML=netTxt(+$("#bp"+id).value||0)};
+const stepBid=(id,d)=>{const i=$("#bp"+id);i.value=Math.max(5,(+i.value||0)+d);BD[id]=i.value;net(id);vib()};
+const jobsView=()=>!D.orders.length?`<div class="e">📍<br>مفيش مشاوير لسه<br><span class="sub">قدّم عروضك من تاب "فرص"</span></div>`:D.orders.map(o=>{const dst=o.status=="accepted"?[o.pickup_lat,o.pickup_lng]:[o.dropoff_lat,o.dropoff_lng],act=o.status=="accepted"||o.status=="picked_up";
+ return `<div class="card"><div class="r"><b>${esc(o.title)}</b><span class="t ${o.status=="delivered"?"ok":""}">${ST[o.status]}</span></div><div class="sub">${esc(o.pickup_address)} ← ${esc(o.dropoff_address)}</div>
+ ${act?`<div class="r" style="margin-top:8px"><span>👤 ${esc(o.customer_name||"")}</span>${o.customer_phone?call(o.customer_name,o.customer_phone):""}</div>`:""}
+ <div class="g" style="margin-top:8px"><div class="sub">السعر<div class="p" style="color:var(--tx)">${money(o.final_price)}</div></div><div class="sub">صافي ربحك<div class="p" style="color:var(--cy)">${money(o.courier_earning)}</div></div></div><div class="sub">عمولة المنصة ${o.commission_rate}% = ${money(o.commission_amount)}</div>
+ ${act&&o.pickup_lat!=null?slot("j"+o.id,{p:[o.pickup_lat,o.pickup_lng],d:[o.dropoff_lat,o.dropoff_lng]})+`<a class="b" style="display:block;text-align:center;text-decoration:none" href="https://www.google.com/maps/dir/?api=1&destination=${dst[0]},${dst[1]}" target="_blank">🧭 ابدأ الملاحة</a>`:""}
+ ${o.status=="accepted"?`<button class="b" onclick="pick('${o.id}')">تم استلام الطلب</button>`:""}
+ ${o.status=="picked_up"?`<label>كود التسليم (اطلبه من المستلم)</label><div class="r"><input class="num" id="cd${o.id}" inputmode="numeric" maxlength="4" placeholder="••••"><button class="b s" onclick="deliver('${o.id}')">سلّم</button></div>`:""}${orderActs(o,"m")}</div>`}).join("");
+function bars(rows,cols,w=300,h=110){const mx=Math.max(1,...rows.flatMap(r=>cols.map(c=>+r[c.k]||0))),n=rows.length||1,bw=(w-10)/n,g=bw*.8/cols.length;
+ return `<svg viewBox="0 0 ${w} ${h+18}" style="width:100%;height:auto;margin-top:8px">${rows.map((r,i)=>cols.map((c,j)=>{const v=+r[c.k]||0,hh=v/mx*h;return `<rect x="${5+i*bw+j*g}" y="${h-hh}" width="${Math.max(1,g-1)}" height="${hh}" rx="1.5" fill="${c.c}"><title>${r.day}: ${v}</title></rect>`}).join("")).join("")}${rows.map((r,i)=>i%Math.ceil(n/6)==0?`<text x="${5+i*bw}" y="${h+13}" font-size="8" fill="#8A94B2">${r.day.slice(8,10)}/${r.day.slice(5,7)}</text>`:"").join("")}</svg>`}
+function dashView(){const d=AD.dash,bg=AD.badge;
+ const chips=`<div class="r" style="justify-content:flex-start;gap:6px;margin:6px 0">${[[7,"7 أيام"],[30,"30 يوم"],[90,"90 يوم"],[0,"الكل"]].map(([v,l])=>`<button class="t chip ${AD.days==v?"on":""}" onclick="AD.days=${v};TT={};refresh()">${l}</button>`).join("")}</div>`;
+ if(!d)return chips+`<div class="e">جاري التحميل…</div>`;
+ const k=d.kpis,u=d.users,tot=d.status.reduce((s,x)=>s+x.n,0)||1,SC={bidding:"#5B8CFF",accepted:"#35D0FF",picked_up:"#A68BFF",delivered:"#3DD9A0",cancelled:"#FF4D6A"};
+ const kp=(l,v,c)=>`<div class="card" style="margin:0"><div class="sub">${l}</div><div class="big" style="font-size:21px${c?";color:"+c:""}">${v}</div></div>`;
+ const cr=k.total?k.cancelled/k.total*100:0;
+ return chips+(bg.ver||bg.complaints?`<div class="card" style="border-color:var(--pri)"><b>⚠️ محتاج انتباه</b>${bg.ver?`<div class="r" style="margin-top:6px"><span>${bg.ver} طلب توثيق منتظر</span><button class="b s" onclick="go('ver')">راجع</button></div>`:""}${bg.complaints?`<div class="r" style="margin-top:6px"><span>${bg.complaints} بلاغ مفتوح</span><button class="b s" onclick="go('me')">افتح</button></div>`:""}</div>`:"")+
+ `<div class="g">${kp("إجمالي المعاملات",money(k.gmv))}${kp("أرباح العمولة",money(k.commission),"var(--cy)")}${kp("طلبات مكتملة",fmtN(k.completed))}${kp("طلبات نشطة",fmtN(k.active))}${kp("متوسط قيمة الطلب",money(k.avg_order))}${kp("نسبة الإلغاء",fmtN(cr)+"%",cr>20?"var(--red)":"")}</div>
+ <div class="card"><b>⏱️ الأداء</b><div class="g" style="margin-top:8px"><div class="sub">متوسط وقت أول قبول<div class="p" style="color:var(--tx)">${fmtN(k.avg_accept_min)} د</div></div><div class="sub">متوسط وقت التوصيل<div class="p" style="color:var(--tx)">${fmtN(k.avg_delivery_min)} د</div></div><div class="sub">متوسط عروض للطلب<div class="p" style="color:var(--tx)">${fmtN(k.avg_bids)}</div></div><div class="sub">متوسط تقييم المناديب<div class="p" style="color:var(--tx)">⭐ ${fmtN(u.avg_rating)}</div></div></div></div>
+ <div class="card"><b>👥 المستخدمين</b><div class="g" style="margin-top:8px"><div class="sub">عملاء<div class="p" style="color:var(--tx)">${fmtN(u.customers)}</div></div><div class="sub">مناديب (موثّق/الكل)<div class="p" style="color:var(--tx)">${fmtN(u.verified_couriers)}/${fmtN(u.couriers)}</div></div><div class="sub">جدد في الفترة<div class="p" style="color:var(--tx)">${fmtN(u.new_users)}</div></div><div class="sub">موقوفين<div class="p" style="color:${u.blocked?"var(--red)":"var(--tx)"}">${fmtN(u.blocked)}</div></div></div></div>
+ <div class="card"><b>📈 الطلبات يوميًا</b><div class="sub"><span style="color:#5B8CFF">■</span> مُنشأ &nbsp;<span style="color:#3DD9A0">■</span> مكتمل</div>${bars(d.series,[{k:"created",c:"#5B8CFF"},{k:"delivered",c:"#3DD9A0"}])}</div>
+ <div class="card"><b>💵 عمولة المنصة يوميًا</b>${bars(d.series,[{k:"commission",c:"#35D0FF"}])}</div>
+ <div class="card"><b>توزيع الحالات</b><div style="display:flex;height:12px;border-radius:8px;overflow:hidden;margin:10px 0">${d.status.map(s=>`<i style="width:${s.n/tot*100}%;background:${SC[s.status]}"></i>`).join("")}</div>${d.status.map(s=>`<div class="r sub"><span><span style="color:${SC[s.status]}">●</span> ${ST[s.status]}</span><span>${s.n}</span></div>`).join("")||`<div class="sub">لا توجد طلبات</div>`}</div>
+ <div class="card"><b>🏆 أفضل المناديب</b>${d.top.length?d.top.map((c,i)=>`<div class="r" style="margin-top:8px"><div class="r" style="gap:10px;justify-content:flex-start"><span class="sub">${i+1}</span>${im(`/photo/selfie/${c.id}`,"av")}<div><b>${esc(c.name)}</b><div class="sub">⭐${fmtN(c.rating_avg)} • ${c.deliveries} مشوار</div></div></div><span style="color:var(--cy);font-weight:800">${money(c.gmv)}</span></div>`).join(""):`<div class="e">لسه مفيش مشاوير مكتملة</div>`}</div>
+ <div class="card"><b>🕒 آخر الطلبات</b>${d.recent.map(o=>`<div class="r" style="margin-top:8px"><div><b>${esc(o.title)}</b><div class="sub">${esc(o.customer_name)}${o.courier_name?" ← "+esc(o.courier_name):""} • ${dt(o.created_at)}</div></div><span class="t ${o.status=="delivered"?"ok":""}">${ST[o.status]}</span></div>`).join("")||`<div class="sub">لا توجد طلبات</div>`}</div>`}
+const fchips=(arr,cur,fn)=>`<div class="r" style="justify-content:flex-start;gap:6px;flex-wrap:wrap;margin:6px 0">${arr.map(([v,l])=>`<button class="t chip ${cur==v?"on":""}" onclick="${fn}('${v}')">${l}</button>`).join("")}</div>`;
+const sq=(val,ph,fld)=>`<input value="${esc(val)}" placeholder="${ph}" oninput="AD.${fld}=this.value" onkeydown="if(event.key=='Enter'){this.blur();TT={};refresh()}">`;
+function aOrders(){return sq(AD.oq,"🔍 ابحث بالعنوان أو اسم/رقم العميل ثم Enter","oq")+fchips([["","الكل"],["bidding","مفتوح"],["accepted","مقبول"],["picked_up","في الطريق"],["delivered","مكتمل"],["cancelled","ملغي"]],AD.os,"setOS")+
+ (AD.orders.length?AD.orders.map(o=>`<div class="card"><div class="r"><b>${esc(o.title)}</b><span class="t ${o.status=="delivered"?"ok":""}">${ST[o.status]}</span></div><div class="sub">${esc(o.pickup_address)} ← ${esc(o.dropoff_address)}</div><div class="sub">👤 ${esc(o.customer_name)} ${o.customer_phone?`<span dir="ltr">${esc(o.customer_phone)}</span>`:""}${o.courier_name?` → 🛵 ${esc(o.courier_name)}`:""}</div>
+ <div class="r sub" style="margin-top:4px"><span>${o.final_price?money(o.final_price)+" • عمولة "+money(o.commission_amount):"مقترح "+money(o.suggested_price)}</span><span>${dt(o.created_at)}</span></div>${o.cancel_reason?`<div class="sub">سبب الإلغاء: ${esc(o.cancel_reason)}</div>`:""}
+ ${["delivered","cancelled"].includes(o.status)?"":`<button class="b s d" style="margin-top:8px" onclick="aCancel('${o.id}')">إلغاء الطلب</button>`}</div>`).join("")+(AD.om?`<button class="b l" onclick="moreOrders()">عرض المزيد</button>`:""):`<div class="e">مفيش طلبات</div>`)}
+const setOS=v=>{AD.os=v;TT={};refresh()};
+const moreOrders=()=>run(async()=>{const r=await api(`/admin/orders?status=${AD.os}&q=${encodeURIComponent(AD.oq)}&limit=20&offset=${AD.orders.length}`);AD.orders=AD.orders.concat(r);AD.om=r.length==20;render(true)});
+const aCancel=id=>sheet("إلغاء الطلب (إدارة)",`<label>السبب (هيوصل للعميل والمندوب)</label><input id="rs">`,async d=>{const r=d.querySelector("#rs").value.trim();if(!r)throw new Error("اكتب السبب");await api(`/admin/orders/${id}/cancel`,"POST",{reason:r});toast("تم إلغاء الطلب");TT={};await refresh()},"إلغاء الطلب");
+function aUsers(){return sq(AD.uq,"🔍 ابحث بالاسم أو رقم الموبايل ثم Enter","uq")+fchips([["all","الكل"],["customer","عملاء"],["courier","مناديب"],["admin","إدارة"],["blocked","موقوفين"]],AD.uf,"setUF")+
+ (AD.users.length?AD.users.map(u=>`<div class="card"><div class="r"><div class="r" style="gap:10px;justify-content:flex-start">${u.v_status=="approved"?im(`/photo/selfie/${u.id}`,"av"):`<span class="av">${esc((u.name||"?")[0])}</span>`}<div><b>${esc(u.name)}</b> ${u.is_verified?`<span class="vb">✔</span>`:""}<div class="sub"><span dir="ltr">${esc(u.phone)}</span> • ${(u.roles||[u.role]).map(r=>RN[r]).join(" + ")}</div></div></div>${u.is_blocked?`<span class="t" style="background:rgba(255,77,106,.15);color:var(--red)">موقوف</span>`:""}</div>
+ <div class="sub" style="margin-top:6px">${u.orders_count} طلب${u.rating_count>0?" • ⭐"+fmtN(u.rating_avg):""} • انضم ${dt(u.created_at)}${u.v_status?" • توثيق: "+VS[u.v_status]:""}</div>${u.is_blocked?`<div class="sub">سبب الإيقاف: ${esc(u.blocked_reason||"")}</div>`:""}
+ ${u.role=="admin"?"":u.is_blocked?`<button class="b s l" style="margin-top:8px" onclick="unblockU('${u.id}')">رفع الإيقاف</button>`:`<button class="b s d" style="margin-top:8px" onclick="blockU('${u.id}')">إيقاف الحساب</button>`}</div>`).join("")+(AD.um?`<button class="b l" onclick="moreUsers()">عرض المزيد</button>`:""):`<div class="e">مفيش نتائج</div>`)}
+const setUF=v=>{AD.uf=v;TT={};refresh()};
+const moreUsers=()=>run(async()=>{const r=await api(`/admin/users?f=${AD.uf}&q=${encodeURIComponent(AD.uq)}&limit=20&offset=${AD.users.length}`);AD.users=AD.users.concat(r);AD.um=r.length==20;render(true)});
+const blockU=id=>sheet("إيقاف الحساب",`<label>سبب الإيقاف (هيظهر للمستخدم عند الدخول)</label><input id="rs">`,async d=>{const r=d.querySelector("#rs").value.trim();if(!r)throw new Error("اكتب السبب");await api(`/admin/users/${id}/block`,"POST",{reason:r});toast("تم إيقاف الحساب");TT={};await refresh()},"إيقاف");
+const unblockU=id=>run(async()=>{if(!confirm("رفع الإيقاف عن الحساب؟"))return;await api(`/admin/users/${id}/unblock`,"POST");toast("تم رفع الإيقاف");TT={};await refresh()});
+function adminMore(){return `<div class="card c"><span class="av big">${esc((U.name||"?")[0])}</span><h3 style="margin:8px 0 0">${esc(U.name)} <span class="vb">إدارة</span></h3><div class="sub"><span dir="ltr">${esc(U.phone)}</span></div></div>
+<div class="card"><b>نسبة العمولة (%)</b><div class="r" style="margin-top:8px"><input class="num" id="cr" type="number" min="0" max="30" value="${CFG.rate}"><button class="b s" onclick="saveRate()">حفظ</button></div><div class="sub" style="margin-top:4px">بتسري على الطلبات الجديدة فقط.</div></div>
+<div class="card"><b>🎫 البلاغات المفتوحة (${AD.comp.length})</b>${AD.comp.length?AD.comp.map(c=>`<div style="border-top:1px solid var(--bd);margin-top:10px;padding-top:8px"><div class="r"><b>${esc(CT[c.type]||c.type)}</b><span class="sub">${dt(c.created_at)}</span></div><div class="sub">طلب: ${esc(c.order_title||"")} • من: ${esc(c.user_name)} (${RN[c.user_role]})${c.against_name?" • ضد: "+esc(c.against_name):""}</div><div style="margin:4px 0">${esc(c.message)}</div><button class="b s" onclick="resolveC('${c.id}')">تمت المعالجة</button></div>`).join(""):`<div class="e">مفيش بلاغات 🎉</div>`}</div>
+<div class="card"><b>📤 تصدير</b><div class="sub">طلبات الفترة المختارة في اللوحة (${AD.days?AD.days+" يوم":"الكل"}) كملف يفتح في Excel.</div><button class="b" onclick="exportCsv()">تنزيل ملف الطلبات CSV</button></div>
+<div class="card"><b>🧾 سجل العمليات</b>${AD.audit.length?AD.audit.map(a=>`<div class="sub" style="margin-top:6px">• ${esc(a.admin_name||"")} ${esc(AUD[a.action]||a.action)} ${esc(a.details||"")} <span style="font-size:11px">(${dt(a.created_at)})</span></div>`).join(""):`<div class="sub" style="margin-top:6px">لا يوجد</div>`}</div>
+<button class="b l" onclick="logout()">تسجيل الخروج</button>`}
+const saveRate=()=>run(async()=>{const r=+$("#cr").value;await api("/admin/commission","POST",{rate:r});CFG.rate=r;toast("تم الحفظ ✅");TT={};await refresh()});
+const resolveC=id=>sheet("معالجة البلاغ",`<label>ملاحظة للمستخدم (اختياري)</label><input id="rs" placeholder="اتخذنا اللازم…">`,async d=>{await api(`/admin/complaints/${id}/resolve`,"POST",{note:d.querySelector("#rs").value.trim()});toast("تمت المعالجة ✅");TT={};await refresh()},"تمت المعالجة");
+const exportCsv=()=>run(async()=>{const r=await fetch(API+`/admin/export/orders.csv?days=${AD.days}`,{headers:{Authorization:"Bearer "+tok}});if(!r.ok)throw new Error("تعذّر التصدير");const a=document.createElement("a");a.href=URL.createObjectURL(await r.blob());a.download="orders.csv";document.body.appendChild(a);a.click();a.remove()});
+const verView=()=>!D.ver.length?`<div class="e">✅<br>مفيش طلبات توثيق منتظرة</div>`:D.ver.map(v=>{const u=`/admin/verifications/${v.user_id}/`;
+ return `<div class="card"><div class="r"><b>${esc(v.name)}</b><span class="t">${v.role=="courier"?"مندوب":"عميل"}</span></div><div class="sub">📞 <span dir="ltr">${esc(v.phone)}</span></div>
+ <div style="margin:6px 0"><b class="num" style="direction:ltr;display:inline-block;letter-spacing:1px">${esc(v.national_id)}</b></div><div class="sub">مواليد ${String(v.birth_date).slice(0,10)} • ${esc(v.governorate_name||"")} • ${v.gender=="male"?"ذكر":"أنثى"}${v.vehicle_type?" • "+VEH[v.vehicle_type]:""}${v.plate?" • "+esc(v.plate):""}</div>
+ <div class="r" style="margin-top:8px">${im(u+"front","th")}${im(u+"back","th")}${im(u+"selfie","th")}</div><div class="sub" style="margin-top:4px">اضغط على الصورة للتكبير • قارن الاسم والرقم بالبطاقة والسيلفي</div>
+ <div class="g"><button class="b" onclick="vApprove('${v.user_id}')">✔ موافقة</button><button class="b d" onclick="vReject('${v.user_id}')">✖ رفض</button></div></div>`}).join("");
+document.addEventListener("click",e=>{if(e.target.classList&&e.target.classList.contains("th"))zoom(e.target.src)});
+const vApprove=id=>run(async()=>{await api(`/admin/verifications/${id}/approve`,"POST");toast("تمت الموافقة ✅");TT={};await refresh()});
+const vReject=id=>sheet("رفض التوثيق",`<label>سبب الرفض (هيوصل للمستخدم)</label><input id="rs" value="الصورة غير واضحة">`,async d=>{const r=d.querySelector("#rs").value.trim();if(!r)throw new Error("اكتب السبب");await api(`/admin/verifications/${id}/reject`,"POST",{reason:r});toast("تم الرفض");TT={};await refresh()},"رفض");
+
+// ---------- الإشعارات / الحساب / الطلبات ----------
+const notifView=()=>`<div class="r" style="margin:6px 0"><b>🔔 الإشعارات</b><button class="b s l" onclick="go(U.role=='admin'?'stats':U.role=='courier'?'open':'mine')">رجوع</button></div>`+(NT.length?NT.map(n=>`<div class="card" style="${n.is_read?"":"border-color:var(--pri)"}"><b>${esc(n.title)}</b><div class="sub">${esc(n.body||"")}</div><div class="sub" style="font-size:11px">${dt(n.created_at)}</div></div>`).join(""):`<div class="e">🔕<br>مفيش إشعارات</div>`);
+const earnCard=()=>`<div class="card"><b>💰 أرباحك</b><div class="g" style="margin-top:8px"><div class="sub">اليوم<div class="p" style="color:var(--cy)">${money(EX.today)}</div></div><div class="sub">آخر 7 أيام<div class="p">${money(EX.week)}</div></div><div class="sub">آخر 30 يوم<div class="p">${money(EX.month)}</div></div><div class="sub">الإجمالي (${EX.count} مشوار)<div class="p">${money(EX.total)}</div></div></div>${EX.recent.length?`<div class="sub" style="margin-top:8px">آخر المشاوير:</div>`+EX.recent.map(r=>`<div class="r sub"><span>${esc(r.title)}</span><span style="color:var(--cy)">${money(r.courier_earning)}</span></div>`).join(""):""}</div>`;
+function meExtra(){let h=roleCard()+vbanner();if(U.role=="courier"&&EX)h+=earnCard();
+ h+=`<div class="card"><b>الحساب</b><div class="r" style="margin-top:8px;gap:8px;justify-content:flex-start"><button class="b s l" onclick="editAvatar()">🖼️ الصورة</button><button class="b s l" onclick="editBio()">📝 النبذة</button><button class="b s l" onclick="editName()">✏️ تعديل الاسم</button><button class="b s l" onclick="chPass()">🔑 كلمة المرور</button></div></div>`;
+ if(U.role=="customer"&&AA.length)h+=`<div class="card"><b>⭐ عناويني المحفوظة</b>${AA.map(a=>`<div class="r" style="margin-top:8px"><div><b>${esc(a.label)}</b><div class="sub">${esc(a.address)}</div></div><button class="ic" onclick="delAddr('${a.id}')">🗑</button></div>`).join("")}</div>`;
+ if(CP.length)h+=`<div class="card"><b>🎫 بلاغاتي</b>${CP.map(c=>`<div style="margin-top:8px"><span class="t ${c.status=="resolved"?"ok":""}">${c.status=="resolved"?"تمت المعالجة":"قيد المراجعة"}</span> <span class="sub">${esc(CT[c.type]||c.type)} — ${esc(c.order_title||"")}</span>${c.admin_note?`<div class="sub">رد الإدارة: ${esc(c.admin_note)}</div>`:""}</div>`).join("")}</div>`;
+ return h}
+const editName=()=>sheet("تعديل الاسم",`<label>الاسم</label><input id="en" value="${esc(U.name)}" maxlength="60">`,async d=>{const r=await api("/me","PATCH",{name:d.querySelector("#en").value});U.name=r.name;try{localStorage.setItem("usr",JSON.stringify(U))}catch(e){}toast("تم الحفظ ✅");await refresh()});
+// ---------- تعدد الأدوار (المرحلة 3) ----------
+const RLS=()=>U.roles&&U.roles.length?U.roles:[U.role],RI={customer:"📦",courier:"🏍️"};
+const saveU=()=>{try{localStorage.setItem("tok",tok);localStorage.setItem("usr",JSON.stringify(U))}catch(e){}};
+const needVeh=()=>U.role=="courier"&&ME&&(ME.v_status=="pending"||ME.v_status=="approved")&&!ME.vehicle_type;
+const switchRole=r=>run(async()=>{if(r==U.role)return;const j=await api("/me/switch-role","POST",{role:r});
+ tok=j.token;U={...U,role:j.user.role,roles:j.user.roles};saveU();
+ D={orders:[],bids:{},open:[],track:{},stats:null,ver:[]};ME=PF=EX=null;V=freshV();prev={};TT={};BD={};tab=r=="courier"?"open":"mine";
+ if(r=="courier"&&j.next=="verify"){tab="me";V.open=true;toast("وثّق حسابك الأول عشان تقدّم عروض")}
+ else if(r=="courier"&&j.next=="vehicle"){tab="me";toast("حدّد نوع مركبتك عشان تقدر تشتغل")}
+ else toast("اشتغلت كـ"+RN[r]);
+ await refresh()});
+const addRole=r=>sheet(r=="courier"?"إضافة صفة مندوب":"إضافة صفة عميل",`<div class="sub" style="margin:8px 0">${r=="courier"?"هتفضل بنفس حسابك ومعاملاتك. توثيق الهوية اللي عملته بيتستخدم تاني، ومش هتقدر تقدّم عروض لحد ما توثّق حسابك وتحدّد مركبتك. وطلباتك أنت مش هتظهر لك في فرص المندوب.":"هتقدر تنشر طلبات توصيل من نفس الحساب."}</div>`,async()=>{
+ const j=await api("/me/roles","POST",{role:r});U.roles=j.roles;saveU();await switchRole(r)},"أضف الصفة");
+const roleBar=()=>{const rs=RLS().filter(r=>r!="admin");return rs.length<2?"":`<div class="rc" style="margin:0 0 10px">${rs.map(r=>`<button class="${U.role==r?"on":""}" style="padding:8px 6px" onclick="switchRole('${r}')">${RI[r]} ${RN[r]}</button>`).join("")}</div>`};
+const roleCard=()=>{const rs=RLS(),miss=["customer","courier"].filter(r=>!rs.includes(r));
+ return `<div class="card"><b>صفات حسابك</b><div class="sub" style="margin-top:4px">${rs.map(r=>`${RI[r]||""} ${RN[r]}${r==U.role?" (نشطة الآن)":""}`).join(" • ")}</div>${rs.length>1?`<div class="sub">بدّل بينهم من الشريط اللي فوق. بياناتك ومحفظتك ومعاملاتك واحدة.</div>`:""}${miss.map(r=>`<button class="b s l" style="margin-top:8px" onclick="addRole('${r}')">➕ أضف صفة ${RN[r]}</button>`).join("")}</div>`};
+const vehSheet=()=>sheet("نوع المركبة",`<select id="vh">${Object.entries(VEH).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select><label>رقم اللوحة (اختياري)</label><input id="vp2" maxlength="20">`,async d=>{
+ await api("/verification/vehicle","POST",{vehicle_type:d.querySelector("#vh").value,plate:d.querySelector("#vp2").value});toast("تم الحفظ ✅");await refresh()},"حفظ");
+const vbanner=()=>needVeh()?`<div class="card" style="border-color:var(--pri)"><b>🛵 حدّد نوع مركبتك</b><div class="sub">مطلوب عشان تقدر تقدّم عروض كمندوب.</div><button class="b" onclick="vehSheet()">حدّد المركبة</button></div>`:"";
+// ---------- الملف الشخصي ----------
+const editBio=()=>sheet("النبذة التعريفية",`<label>اكتب نبذة قصيرة عنك (حتى 300 حرف)</label><textarea id="bi" maxlength="300" placeholder="مثلاً: بوصّل بسرعة وأمانة، وبلتزم بالمواعيد">${esc(PF&&PF.bio||"")}</textarea>`,async d=>{await api("/me/profile","PATCH",{bio:d.querySelector("#bi").value});PF=await api("/profile/me");toast("تم الحفظ ✅");render(true)});
+function cropSquare(f,sz=512){return new Promise((ok,no)=>{const i=new Image();i.onload=()=>{const m=Math.min(i.width,i.height);if(m<200)return no(new Error("الصورة صغيرة، اختار صورة أوضح"));const c=document.createElement("canvas");c.width=c.height=sz;c.getContext("2d").drawImage(i,(i.width-m)/2,(i.height-m)/2,m,m,0,0,sz,sz);ok(c.toDataURL("image/jpeg",.85))};i.onerror=()=>no(new Error("تعذّر قراءة الصورة"));i.src=URL.createObjectURL(f)})}
+async function pickAvatar(inp){const f=inp.files[0];if(!f)return;try{AV=await cropSquare(f);const p=document.getElementById("avp");p.src=AV;p.style.display="block"}catch(e){toast(e.message)}}
+const editAvatar=()=>{AV=null;sheet("الصورة الشخصية",`<div class="c" style="margin:10px 0"><img id="avp" class="av big" alt="" style="display:none;margin:0 auto 8px"><label class="b s l" style="display:inline-block;cursor:pointer"><input type="file" accept="image/*" style="display:none" onchange="pickAvatar(this)">📷 اختر صورة</label>${PF&&PF.has_avatar?`<div style="margin-top:10px"><a class="sub" style="cursor:pointer" onclick="delAvatar(this)">حذف الصورة الحالية</a></div>`:""}</div>`,async d=>{if(!AV)throw new Error("اختر صورة الأول");await api("/me/avatar","POST",{image:AV});AV=null;PF=await api("/profile/me");toast("تم تحديث صورتك ✅");render(true)},"حفظ")};
+const delAvatar=el=>{if(!confirm("حذف صورتك الشخصية؟"))return;run(async()=>{await api("/me/avatar","DELETE");PF=await api("/profile/me");el.closest(".zm").remove();toast("تم الحذف");render(true)})};
+const viewProfile=id=>run(async()=>{const p=await api(`/profile/${id}`),ve=VEH[p.vehicle_type]||"",ms=new Date(p.member_since).toLocaleDateString("ar-EG",{year:"numeric",month:"long"});
+ sheet(esc(p.name),`<div class="c" style="margin:10px 0">${p.has_avatar||p.is_verified?im(`/photo/face/${p.id}${p.avatar_v?"?v="+p.avatar_v:""}`,"av big"):`<span class="av big">${esc((p.name||"?")[0])}</span>`}<div style="margin-top:6px">${p.is_verified?`<span class="vb">✔ موثّق</span> `:""}${(p.roles||[p.role]).map(r=>`<span class="t">${RN[r]||""}</span>`).join(" ")}</div>${p.rating_count>0?`<div>⭐ ${Number(p.rating_avg).toFixed(1)} <span class="sub">(${p.rating_count} تقييم)</span></div>`:""}</div>${p.bio?`<div class="card" style="margin:6px 0">${esc(p.bio)}</div>`:`<div class="sub c">لا توجد نبذة</div>`}<div class="sub c" style="margin-top:6px">${p.completed} مشوار مكتمل • عضو منذ ${ms}${ve?" • "+ve:""}</div>`,()=>{},"تمام");hydrate()});
+const chPass=()=>sheet("تغيير كلمة المرور",`<label>كلمة المرور الحالية</label><input id="op" type="password"><label>الجديدة (6 أحرف على الأقل)</label><input id="np" type="password">`,async d=>{await api("/me/password","POST",{old_password:d.querySelector("#op").value,new_password:d.querySelector("#np").value});toast("تم تغيير كلمة المرور ✅")});
+function orderActs(o,r){let h="";if(r=="c"&&(o.status=="bidding"||o.status=="accepted"))h+=`<button class="b s d" onclick="cancelOrder('${o.id}')">إلغاء الطلب</button>`;
+ if(["accepted","picked_up","delivered"].includes(o.status))h+=`<button class="b s l" onclick="complain('${o.id}')">⚠️ إبلاغ عن مشكلة</button>`;
+ return h?`<div class="r" style="justify-content:flex-start;gap:8px;flex-wrap:wrap;margin-top:10px">${h}</div>`:""}
+const cancelOrder=id=>sheet("إلغاء الطلب",`<label>سبب الإلغاء</label><select id="cr2">${["غيّرت رأيي","السعر غالي","المندوب اتأخر","طلبت بالغلط","سبب آخر"].map(x=>`<option>${x}</option>`).join("")}</select>`,async d=>{await api(`/orders/${id}/cancel`,"POST",{reason:d.querySelector("#cr2").value});toast("تم إلغاء الطلب");TT={};await refresh()},"إلغاء الطلب");
+const complain=id=>sheet("إبلاغ عن مشكلة",`<label>نوع المشكلة</label><select id="ct">${Object.entries(CT).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select><label>التفاصيل</label><textarea id="cm" maxlength="500" placeholder="اشرح اللي حصل…"></textarea>`,async d=>{const m=d.querySelector("#cm").value.trim();if(m.length<5)throw new Error("اكتب تفاصيل المشكلة");await api(`/orders/${id}/complaint`,"POST",{type:d.querySelector("#ct").value,message:m});toast("وصل بلاغك ✅ هنراجعه");TT={};await refresh()},"إرسال");
+async function userLoad(){
+ if(tab=="notif"&&due("nt",3000)){NT=await api("/notifications");if(NT.some(n=>!n.is_read)){api("/notifications/read","POST").catch(()=>{});if(ME)ME.unread=0}}
+ if(U.role=="courier"&&tab=="me"&&due("ex"))EX=await api("/courier/earnings");
+ if(tab=="me"&&due("cp"))CP=await api("/complaints/mine");
+  if(tab=="me"&&due("pf",8000))PF=await api("/profile/me");
+ if(U.role=="customer"&&(tab=="new"||tab=="me")&&due("aa"))AA=await api("/addresses");
+ const un=ME&&+ME.unread||0;if(prev.un!=null&&un>prev.un)toast("🔔 وصلك إشعار جديد");prev.un=un}
+async function adminLoad(){ME=await api("/me");AD.badge=await api("/admin/badges");
+ if(tab=="notif"&&due("nt",3000)){NT=await api("/notifications");if(NT.some(n=>!n.is_read)){api("/notifications/read","POST").catch(()=>{});ME.unread=0}}
+ if(tab=="stats"&&due("dash"))AD.dash=await api(`/admin/dashboard?days=${AD.days}`);
+ if(tab=="orders"&&due("ord",1e9)){const r=await api(`/admin/orders?status=${AD.os}&q=${encodeURIComponent(AD.oq)}&limit=20`);AD.orders=r;AD.om=r.length==20}
+ if(tab=="users"&&due("usr",1e9)){const r=await api(`/admin/users?f=${AD.uf}&q=${encodeURIComponent(AD.uq)}&limit=20`);AD.users=r;AD.um=r.length==20}
+ if(tab=="ver"&&due("ver",5000))D.ver=await api("/admin/verifications");
+ if(tab=="me"&&due("adm",10000)){AD.comp=await api("/admin/complaints");AD.audit=await api("/admin/audit?limit=20")}}
+
+// ---------- الإجراءات ----------
+const addOrder=()=>run(async()=>{if(!F.ti.trim())throw new Error("اكتب إيه اللي هتوصّله");if(!F.pa.trim()||!F.da.trim())throw new Error("حدد عنوان الاستلام والتسليم");if(!(+F.sp>0))throw new Error("اكتب سعر مقترح");
+ await api("/orders","POST",{title:F.ti.trim(),pickup_address:F.pa.trim(),dropoff_address:F.da.trim(),suggested_price:+F.sp,pickup_lat:PL&&PL[0],pickup_lng:PL&&PL[1],dropoff_lat:DL&&DL[0],dropoff_lng:DL&&DL[1],distance_km:PL&&DL?hav(PL,DL):null});
+ PL=DL=null;F={ti:"",pa:"",da:"",sp:40};tab="mine";vib();toast("تم نشر الطلب ✅ هنبلغك لما توصل عروض");await refresh()});
+const accept=(o,b)=>run(async()=>{const x=(D.bids[o]||[]).find(z=>z.id==b);if(x&&!confirm(`تأكيد قبول عرض ${x.name} بسعر ${money(x.price)}؟`))return;await api(`/orders/${o}/accept/${b}`,"POST");vib();toast("تم قبول العرض ✅");await refresh()});
+const bid=id=>run(async()=>{if(!vOK()){tab="me";V.open=true;render(true);throw new Error("وثّق حسابك الأول عشان تقدّم عروض")}
+ await api(`/orders/${id}/bids`,"POST",{price:+$("#bp"+id).value});vib();toast("تم إرسال عرضك ✅");await refresh()});
+const pick=id=>run(async()=>{await api(`/orders/${id}/picked-up`,"POST");vib();await refresh()});
+const deliver=id=>run(async()=>{const r=await api(`/orders/${id}/deliver`,"POST",{code:ar2en($("#cd"+id).value)});vib();toast("تم التسليم 🎉 ربحك "+money(r.earning));await refresh()});
+const rate=(id,n)=>run(async()=>{await api(`/orders/${id}/rate`,"POST",{stars:n});rated.push(id);try{localStorage.setItem("rated",JSON.stringify(rated))}catch(e){}toast("شكرًا لتقييمك ⭐");render(true)});
+
+const onSrv=()=>{if(!U)render(true);else refresh()};
+async function refresh(){if(!U)return render();if(SRV!==true){connect();return}
+ try{if(U.role=="admin")await adminLoad();
+  else{ME=await api("/me");if(ME&&ME.roles&&JSON.stringify(ME.roles)!=JSON.stringify(U.roles||[])){U.roles=ME.roles;saveU()}D.orders=await api("/orders/mine");await userLoad();
+   if(U.role=="courier"&&tab=="open"){D.open=await api("/orders/open");if(prev.open!=null&&D.open.length>prev.open)toast("طلب جديد متاح 🏍️");prev.open=D.open.length}
+   if(U.role=="customer"){await Promise.all(D.orders.map(async o=>{if(o.status=="bidding")D.bids[o.id]=await api(`/orders/${o.id}/bids`);else if(o.status!="delivered"||!D.track[o.id])D.track[o.id]=await api(`/orders/${o.id}/track`)}));
+    const nb=D.orders.filter(o=>o.status=="bidding").reduce((s,o)=>s+(D.bids[o.id]||[]).length,0);if(prev.nb!=null&&nb>prev.nb)toast("وصلك عرض جديد 💬");prev.nb=nb;
+    prev.st=prev.st||{};D.orders.forEach(o=>{if(prev.st[o.id]&&prev.st[o.id]!=o.status){if(o.status=="picked_up")toast("المندوب استلم طلبك 🛵");if(o.status=="delivered")toast("تم تسليم طلبك ✅")}prev.st[o.id]=o.status})}}}catch(e){if(!e.net)toast(e.message)}
+ render()}
+function render(force){const a=document.activeElement;if(!force&&a&&/INPUT|SELECT/.test(a.tagName)&&$("#app").contains(a))return;
+ const sig=JSON.stringify([U,ME,tab,mode,RL,D,PL,DL,F,BD,V.open,CFG,AD,NT,EX,AA,CP,PF,OT.sent]);if(sig==last&&!force)return;last=sig;
+ $("#app").innerHTML=U?view():authView();if(U){mountMaps();hydrate()}}
+setInterval(()=>{if(U&&U.role=="courier"&&navigator.geolocation)D.orders.filter(o=>o.status=="accepted"||o.status=="picked_up").forEach(o=>navigator.geolocation.getCurrentPosition(p=>api(`/orders/${o.id}/location`,"POST",{lat:p.coords.latitude,lng:p.coords.longitude}).catch(()=>{}),()=>{},{enableHighAccuracy:true}))},5000);
+setInterval(refresh,4000);connect().then(()=>api("/config").then(c=>{CFG.rate=c.commission_rate;render()}).catch(()=>{}));if(U)initPush();refresh();
+    </script>
+</body>
+
+</html>
